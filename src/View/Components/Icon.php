@@ -28,7 +28,8 @@ class Icon extends Component
         // If the icon name starts with "common-", get the common icon name from config
         if (Str::startsWith($name, 'common-')) {
             $iconKey = Str::after($name, 'common-');
-            return config("mary.icons.common.{$iconKey}", $iconKey);
+            $result = config("mary.icons.common.{$iconKey}", $iconKey);
+            return "{$iconPrefix}-{$result}";
         }
 
         // If the icon name already has a prefix use it as-is
