@@ -49,9 +49,9 @@ class Modal extends Component
                         @if(!$persistent)
                             <form method="dialog" tabindex="-1">
                                 @if ($id)
-                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" type="submit" tabindex="-1" />
+                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="common-close" type="submit" tabindex="-1" />
                                 @else
-                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" @click="$wire.{{ $attributes->wire('model')->value() }} = false" tabindex="-1" />
+                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="common-close" @click="$wire.{{ $attributes->wire('model')->value() }} = false" tabindex="-1" />
                                 @endif
                             </form>
                         @endif

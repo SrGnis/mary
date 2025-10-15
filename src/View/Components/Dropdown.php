@@ -13,7 +13,7 @@ class Dropdown extends Component
     public function __construct(
         public ?string $id = null,
         public ?string $label = null,
-        public ?string $icon = 'o-chevron-down',
+        public ?string $icon = null,
         public ?bool $right = false,
         public ?bool $top = false,
         public ?bool $noXAnchor = false,
@@ -21,6 +21,7 @@ class Dropdown extends Component
         public mixed $trigger = null
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->icon = $icon ??'common-chevron-down';
     }
 
     public function render(): View|Closure|string

@@ -22,7 +22,7 @@ class Breadcrumbs extends Component
     public function __construct(
         public ?string $id = null,
         public array $items = [],
-        public string $separator = 'o-chevron-right',
+        public ?string $separator = null,
         public ?string $linkItemClass = "hover:underline text-sm",
         public ?string $textItemClass = "text-sm",
         public ?string $iconClass = "h-4 w-4",
@@ -30,6 +30,7 @@ class Breadcrumbs extends Component
         public ?bool $noWireNavigate = false,
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->separator = $separator ??'common-chevron-right';
     }
 
     public function tooltip(array $element): ?string

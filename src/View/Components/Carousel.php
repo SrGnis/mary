@@ -76,9 +76,9 @@ class Carousel extends Component
 
                 @if(!$withoutArrows)
                     <!-- previous button -->
-                    <x-mary-button icon="o-chevron-left"  @click="previous()" class="absolute cursor-pointer left-5 top-1/2 z-[2] btn-circle btn-sm" />
+                    <x-mary-button icon="common-chevron-left"  @click="previous()" class="absolute cursor-pointer left-5 top-1/2 z-[2] btn-circle btn-sm" />
                     <!-- next button -->
-                    <x-mary-button icon="o-chevron-right"  @click="next()" class="absolute cursor-pointer right-5 top-1/2 z-[2] btn-circle btn-sm" />
+                    <x-mary-button icon="common-chevron-right"  @click="next()" class="absolute cursor-pointer right-5 top-1/2 z-[2] btn-circle btn-sm" />
                 @endif
 
                 <!-- slides -->

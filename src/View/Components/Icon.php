@@ -23,8 +23,20 @@ class Icon extends Component
     public function icon(): string|Stringable
     {
         $name = Str::of($this->name);
+        $iconPrefix = config('mary.icons.prefix', 'heroicon');
 
-        return $name->contains('.') ? $name->replace('.', '-') : "heroicon-{$this->name}";
+        // If the icon name starts with "common-", get the common icon name from config
+        if (Str::startsWith($name, 'common-')) {
+            $iconKey = Str::after($name, 'common-');
+            return config("mary.icons.common.{$iconKey}", $iconKey);
+        }
+
+        // If the icon name already has a prefix use it as-is
+        if (Str::startsWith($name, $iconPrefix.'-')) {
+            return $name;
+        }
+
+        return $name->contains('.') ? $name->replace('.', '-') : "{$iconPrefix}-{$this->name}";
     }
 
     public function labelClasses(): ?string

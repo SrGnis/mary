@@ -306,7 +306,7 @@ class ChoicesOffline extends Component
                                                             @endif
 
                                                             @if(!$isDisabled() && !$isReadonly())
-                                                                <x-mary-icon @click="toggle(option.{{ $optionValue }})" x-show="!isReadonly && !isDisabled && !isSingle" name="o-x-mark" class="w-4 h-4 hover:text-error" />
+                                                                <x-mary-icon @click="toggle(option.{{ $optionValue }})" x-show="!isReadonly && !isDisabled && !isSingle" name="common-close" class="w-4 h-4 hover:text-error" />
                                                             @endif
                                                         </span>
                                                     </template>
@@ -345,7 +345,7 @@ class ChoicesOffline extends Component
 
                                         {{-- CLEAR ICON  --}}
                                         @if($clearable && !$isReadonly() && !$isDisabled())
-                                            <x-mary-icon @click="reset()" x-show="!isSelectionEmpty" name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                            <x-mary-icon @click="reset()" x-show="!isSelectionEmpty" name="common-close" class="cursor-pointer w-4 h-4 opacity-40"/>
                                         @endif
 
                                         {{-- ICON RIGHT --}}

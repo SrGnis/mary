@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Process;
 use Illuminate\Support\Str;
 use RuntimeException;
 use function Laravel\Prompts\select;
+use function Laravel\Prompts\text;
 
 class MaryInstallCommand extends Command
 {
@@ -31,11 +32,17 @@ class MaryInstallCommand extends Command
         //Yarn or Npm or Bun or Pnpm ?
         $packageManagerCommand = $this->askForPackageInstaller();
 
+        // Choose icon package
+        $iconConfig = $this->askForIconPackage();
+
         // Install Livewire/Volt
         $this->installLivewire($shouldInstallVolt);
 
         // Setup Tailwind and Daisy
         $this->setupTailwindDaisy($packageManagerCommand);
+
+        // Install and configure icon package
+        $this->setupIconPackage($iconConfig);
 
         // Copy stubs if is brand-new project
         $this->copyStubs($shouldInstallVolt);
@@ -270,6 +277,92 @@ class MaryInstallCommand extends Command
 
         if (! copy($source, $destination)) {
             throw new RuntimeException("Failed to copy {$source} to {$destination}");
+        }
+    }
+
+    /**
+     * Ask user to choose their preferred icon package
+     */
+    public function askForIconPackage(): array
+    {
+        $iconPackage = text(
+            'Enter the icon package name (leave empty for Heroicons):',
+            placeholder: 'blade-ui-kit/blade-heroicons',
+            hint: 'Full Composer package name. Leave empty to use Heroicons as default.',
+            required: false
+        );
+
+        // Default to Heroicons if empty
+        if (empty($iconPackage)) {
+            $iconPackage = 'blade-ui-kit/blade-heroicons';
+            $iconPrefix = 'heroicon';
+        } else {
+            $iconPrefix = text(
+                'Enter your icon prefix:',
+                placeholder: 'e.g., heroicon, lucide, phosphor',
+                hint: 'This will be prepended to icon names (e.g., "heroicon-home")',
+                required: true
+            );
+        }
+
+        return [
+            'package' => $iconPackage,
+            'prefix' => $iconPrefix
+        ];
+    }
+
+    /**
+     * Install the chosen icon package and update configuration
+     */
+    public function setupIconPackage(array $iconConfig): void
+    {
+        $package = $iconConfig['package'];
+        $prefix = $iconConfig['prefix'];
+
+        // Install the icon package
+        if (str_contains($package, '/')) {
+            $this->info("\nInstalling {$package} icon package...\n");
+
+            try {
+                Process::run("composer require {$package}", function (string $type, string $output) {
+                    echo $output;
+                })->throw();
+            } catch (\Exception $e) {
+                $this->warn("⚠️  Could not install {$package}. You may need to install it manually.");
+                $this->warn("Error: " . $e->getMessage());
+            }
+        }
+
+        // Publish and update Mary config
+        $this->info("Configuring icon settings...\n");
+
+        // Publish config if it doesn't exist
+        if (!File::exists(base_path() . "{$this->ds}config{$this->ds}mary.php")) {
+            Artisan::call('vendor:publish --force --tag mary.config');
+        }
+
+        // Update the config file with icon settings
+        $configPath = base_path() . "{$this->ds}config{$this->ds}mary.php";
+        $config = File::get($configPath);
+
+        // Update icon package
+        $config = str($config)->replace(
+            "'package' => 'blade-ui-kit/blade-heroicons',",
+            "'package' => '{$package}',"
+        );
+
+        // Update icon prefix
+        $config = str($config)->replace(
+            "'prefix' => 'heroicon',",
+            "'prefix' => '{$prefix}',"
+        );
+
+        File::put($configPath, $config);
+
+        $this->info("✅ Icon package configured: {$package} with prefix '{$prefix}'");
+
+        if ($package !== 'custom/no-package') {
+            $this->info("💡 Make sure to clear your view cache: php artisan view:clear");
         }
     }
 }

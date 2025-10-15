@@ -91,7 +91,7 @@ class Signature extends Component
 
                             <!-- CLEAR BUTTON -->
                             <div class="absolute end-2 top-1/2 -translate-y-1/2 ">
-                                <x-mary-button icon="o-backspace" :label="$clearText" @click="clear" class="{{$clearBtnStyle ?? 'btn-sm btn-ghost'}}" />
+                                <x-mary-button icon="common-backspace" :label="$clearText" @click="clear" class="{{$clearBtnStyle ?? 'btn-sm btn-ghost'}}" />
                             </div>
                         </div>
                     </div>

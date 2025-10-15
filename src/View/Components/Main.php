@@ -19,10 +19,11 @@ class Main extends Component
         public ?bool $fullWidth = false,
         public ?bool $withNav = false,
         public ?string $collapseText = 'Collapse',
-        public ?string $collapseIcon = 'o-bars-3-bottom-right',
+        public ?string $collapseIcon = null,
         public ?bool $collapsible = false,
     ) {
         $this->url = route('mary.toogle-sidebar', absolute: false);
+        $this->collapseIcon = $collapseIcon ??'common-bars-3-bottom-right';
     }
 
     public function render(): View|Closure|string

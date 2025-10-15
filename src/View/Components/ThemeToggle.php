@@ -59,8 +59,8 @@ class ThemeToggle extends Component
                         {{ $attributes->class("swap swap-rotate") }}
                     >
                         <input id="{{ $uuid }}" type="checkbox" class="theme-controller opacity-0" @click="toggle()" :value="theme" />
-                        <x-mary-icon x-ref="sun" name="o-sun" class="swap-on" />
-                        <x-mary-icon x-ref="moon" name="o-moon" class="swap-off"  />
+                        <x-mary-icon x-ref="sun" name="common-sun" class="swap-on" />
+                        <x-mary-icon x-ref="moon" name="common-moon" class="swap-off"  />
                     </label>
                 </div>
                 <script>

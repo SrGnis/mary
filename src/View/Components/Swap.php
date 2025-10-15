@@ -14,11 +14,13 @@ class Swap extends Component
         public ?string $id = null,
         public ?string $true = null,
         public ?string $false = null,
-        public ?string $trueIcon = 'o-sun',
-        public ?string $falseIcon = 'o-moon',
+        public ?string $trueIcon = null,
+        public ?string $falseIcon = null,
         public ?string $iconSize = "h-5 w-5",
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->trueIcon = $trueIcon ??'common-sun';
+        $this->falseIcon = $falseIcon ??'common-moon';
     }
 
     public function render(): View|Closure|string

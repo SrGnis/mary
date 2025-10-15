@@ -223,7 +223,7 @@ class DatePicker extends Component
 
                                 {{-- CLEAR ICON --}}
                                 @if($clearable)
-                                    <x-mary-icon @click.prevent="reset()" x-show="!isValueEmpty" name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon @click.prevent="reset()" x-show="!isValueEmpty" name="common-close" class="cursor-pointer w-4 h-4 opacity-40"/>
                                 @endif
 
                                 {{-- ICON RIGHT --}}

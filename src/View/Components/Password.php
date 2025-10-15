@@ -24,8 +24,8 @@ class Password extends Component
         public ?bool $clearable = false,
 
         // Password
-        public ?string $passwordIcon = 'o-eye-slash',
-        public ?string $passwordVisibleIcon = 'o-eye',
+        public ?string $passwordIcon = null,
+        public ?string $passwordVisibleIcon = null,
         public ?bool $passwordIconTabindex = false,
         public ?bool $right = false,
         public ?bool $onlyPassword = false,
@@ -41,6 +41,8 @@ class Password extends Component
         public ?bool $firstErrorOnly = false,
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+        $this->passwordIcon = $passwordIcon ??'common-eye-slash';
+        $this->passwordVisibleIcon = $passwordVisibleIcon ??'common-eye';
 
         // Cannot use a left icon when password toggle should be shown on the left side.
         if (($this->icon && ! $this->right) && ! $this->onlyPassword) {
@@ -153,7 +155,7 @@ class Password extends Component
 
                                 {{-- CLEAR ICON  --}}
                                 @if($clearable)
-                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="o-x-mark" class="cursor-pointer w-4 h-4 opacity-40"/>
+                                    <x-mary-icon x-on:click="$wire.set('{{ $modelName() }}', '', {{ json_encode($attributes->wire('model')->hasModifier('live')) }})"  name="common-close" class="cursor-pointer w-4 h-4 opacity-40"/>
                                 @endif
 
                                 {{-- ICON RIGHT / TOGGLE INPUT TYPE --}}
