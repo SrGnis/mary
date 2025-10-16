@@ -16,6 +16,7 @@ class Modal extends Component
         public ?bool $separator = false,
         public ?bool $persistent = false,
         public ?bool $withoutTrapFocus = false,
+        public ?string $xShow = null, // Alpine.js x-show variable name
 
         // Slots
         public ?string $actions = null
@@ -27,10 +28,20 @@ class Modal extends Component
     {
         return <<<'HTML'
                 <dialog
-                    {{ $attributes->except('wire:model')->class(["modal"]) }}
+                    {{ $attributes->except(['wire:model', 'x-show'])->class(["modal"]) }}
 
                     @if($id)
                         id="{{ $id }}"
+                    @elseif($xShow || $attributes->has('x-show'))
+                        @php
+                            $xShowValue = $xShow ?: $attributes->get('x-show');
+                        @endphp
+                        x-show="{{ $xShowValue }}"
+                        x-cloak
+                        :class="{'modal-open': {{ $xShowValue }}}"
+                        @if(!$persistent)
+                            @keydown.escape.window="{{ $xShowValue }} = false"
+                        @endif
                     @else
                         x-data="{open: @entangle($attributes->wire('model')).live }"
                         x-init="$watch('open', value => { if (!value){ $dispatch('close') }else{ $dispatch('open') } })"
@@ -42,7 +53,14 @@ class Modal extends Component
                     @endif
 
                     @if(!$withoutTrapFocus)
-                        x-trap="open" x-bind:inert="!open"
+                        @if($xShow || $attributes->has('x-show'))
+                            @php
+                                $xShowValue = $xShow ?: $attributes->get('x-show');
+                            @endphp
+                            x-trap="{{ $xShowValue }}" x-bind:inert="!{{ $xShowValue }}"
+                        @else
+                            x-trap="open" x-bind:inert="!open"
+                        @endif
                     @endif
                 >
                     <div class="modal-box {{ $boxClass }}">
@@ -50,6 +68,11 @@ class Modal extends Component
                             <form method="dialog" tabindex="-1">
                                 @if ($id)
                                     <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" type="submit" tabindex="-1" />
+                                @elseif($xShow || $attributes->has('x-show'))
+                                    @php
+                                        $xShowValue = $xShow ?: $attributes->get('x-show');
+                                    @endphp
+                                    <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" @click="{{ $xShowValue }} = false" tabindex="-1" />
                                 @else
                                     <x-mary-button class="btn-circle btn-sm btn-ghost absolute end-2 top-2 z-[999]" icon="o-x-mark" @click="$wire.{{ $attributes->wire('model')->value() }} = false" tabindex="-1" />
                                 @endif
@@ -79,6 +102,11 @@ class Modal extends Component
                         <form class="modal-backdrop" method="dialog">
                             @if ($id)
                                 <button type="submit">close</button>
+                            @elseif($xShow || $attributes->has('x-show'))
+                                @php
+                                    $xShowValue = $xShow ?: $attributes->get('x-show');
+                                @endphp
+                                <button @click="{{ $xShowValue }} = false" type="button">close</button>
                             @else
                                 <button @click="$wire.{{ $attributes->wire('model')->value() }} = false" type="button">close</button>
                             @endif
