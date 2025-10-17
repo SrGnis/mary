@@ -152,7 +152,7 @@ class MaryServiceProvider extends ServiceProvider
         Blade::component($prefix . 'kbd', Kbd::class);
         Blade::component($prefix . 'list-item', ListItem::class);
         Blade::component($prefix . 'loading', Loading::class);
-        Blade::component($prefix . 'markdown', Markdown::class);
+        Blade::component($prefix . 'markdown-editor', Markdown::class);
         Blade::component($prefix . 'modal', Modal::class);
         Blade::component($prefix . 'menu', Menu::class);
         Blade::component($prefix . 'menu-item', MenuItem::class);
