@@ -98,6 +98,9 @@ return [
             'plus-circle' => 'o-plus-circle',
             'backspace' => 'o-backspace',
             'bars-3-bottom-right' => 'o-bars-3-bottom-right',
+            'information-circle' => 'o-circle-info',
+            'check-circle' => 'o-check-circle',
+            'warning-triangle' => 'o-exclamation-triangle',
         ],
     ],
 

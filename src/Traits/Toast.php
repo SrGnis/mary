@@ -11,7 +11,7 @@ trait Toast
         string $title,
         ?string $description = null,
         ?string $position = null,
-        string $icon = 'o-information-circle',
+        string $icon = 'information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
         ?string $redirectTo = null
@@ -40,7 +40,7 @@ trait Toast
         string $title,
         ?string $description = null,
         ?string $position = null,
-        string $icon = 'o-check-circle',
+        string $icon = 'check-circle',
         string $css = 'alert-success',
         int $timeout = 3000,
         ?string $redirectTo = null
@@ -52,7 +52,7 @@ trait Toast
         string $title,
         ?string $description = null,
         ?string $position = null,
-        string $icon = 'o-exclamation-triangle',
+        string $icon = 'exclamation-triangle',
         string $css = 'alert-warning',
         int $timeout = 3000,
         ?string $redirectTo = null
@@ -64,7 +64,7 @@ trait Toast
         string $title,
         ?string $description = null,
         ?string $position = null,
-        string $icon = 'o-x-circle',
+        string $icon = 'x-circle',
         string $css = 'alert-error',
         int $timeout = 3000,
         ?string $redirectTo = null
@@ -76,7 +76,7 @@ trait Toast
         string $title,
         ?string $description = null,
         ?string $position = null,
-        string $icon = 'o-information-circle',
+        string $icon = 'information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
         ?string $redirectTo = null
