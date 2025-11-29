@@ -23,6 +23,17 @@ class File extends Component
         public ?string $cropSaveText = "Crop",
         public ?array $cropConfig = [],
         public ?string $cropMimeType = "image/png",
+        public ?bool $isImage = false,
+
+        // Image preview with removal support
+        public ?string $imageUrl = null,
+        public ?string $placeholderUrl = null,
+        public ?string $removeMethod = null,
+        public ?string $removeText = "Remove",
+
+        // Slots
+        public mixed $preview = null,
+        public mixed $remove = null,
 
         // Validations
         public ?string $errorField = null,
@@ -65,6 +76,9 @@ class File extends Component
                         imagePreview: null,
                         imageCrop: null,
                         originalImageUrl: null,
+                        hasImage: {{ json_encode(!empty($imageUrl)) }},
+                        imageUrl: {{ json_encode($imageUrl) }},
+                        placeholderUrl: {{ json_encode($placeholderUrl) }},
                         cropAfterChange: {{ json_encode($cropAfterChange) }},
                         file: @entangle($attributes->wire('model')),
                         init () {
@@ -95,6 +109,7 @@ class File extends Component
                         refreshImage() {
                             this.progress = 1
                             this.justCropped = false
+                            this.hasImage = true
 
                             if (this.imagePreview?.src) {
                                 this.imagePreview.src = URL.createObjectURL(this.$refs.file.files[0])
@@ -111,6 +126,19 @@ class File extends Component
                              $wire.$removeUpload('{{ $attributes->wire('model')->value }}', this.file.split('livewire-file:').pop(), () => {
                                 this.imagePreview.src = this.originalImageUrl
                              })
+                        },
+                        removeImage() {
+                            this.hasImage = false
+                            this.file = null
+                            this.$refs.file.value = ''
+
+                            if (this.imagePreview && this.placeholderUrl) {
+                                this.imagePreview.src = this.placeholderUrl
+                            }
+
+                            @if($removeMethod)
+                                $wire.{{ $removeMethod }}()
+                            @endif
                         },
                         async save() {
                             $refs.maryCrop.close();
@@ -148,8 +176,7 @@ class File extends Component
                             </legend>
                         @endif
 
-                        {{-- PROGRESS BAR  --}}
-                        @if(! $hideProgress && $slot->isEmpty())
+                        @if(! $hideProgress && !$isImage)
                             <progress
                                 x-cloak
                                 max="100"
@@ -169,31 +196,55 @@ class File extends Component
                                 $attributes->whereDoesntStartWith('class')->class([
                                     "file-input w-full",
                                     "!file-input-error" => $errorFieldName() && $errors->has($errorFieldName()) && !$omitError,
-                                    "hidden" => $slot->isNotEmpty()
+                                    "hidden" => $isImage
                                 ])
                             }}
                         />
 
-                        @if ($slot->isNotEmpty())
+                        @if ($isImage)
                             <!-- PREVIEW AREA -->
-                            <div x-ref="preview" class="relative flex">
+                            <div x-ref="preview" class="relative inline-flex items-start gap-2">
                                 <div
                                     wire:ignore
                                     @click="change()"
                                     :class="processing && 'opacity-50 pointer-events-none'"
-                                    class="cursor-pointer hover:scale-105 transition-all tooltip"
+                                    class="cursor-pointer hover:scale-105 transition-all tooltip relative"
                                     data-tip="{{ $changeText }}"
                                 >
-                                    {{ $slot }}
+                                    <div x-cloak :class="!hasImage && 'opacity-40 grayscale'">
+                                        @if($preview)
+                                            {{ $preview }}
+                                        @else
+                                            <img src="{{ $imageUrl ? $imageUrl : $placeholderUrl }}" class="h-32 w-32 object-cover rounded-lg" />
+                                        @endif
+                                    </div>
+                                    <!-- PROGRESS -->
+                                    <div
+                                        x-cloak
+                                        :style="`--value:${progress}; --size:1.5rem; --thickness: 4px;`"
+                                        :class="!processing && 'hidden'"
+                                        class="radial-progress text-success absolute top-5 start-5 bg-neutral"
+                                        role="progressbar"
+                                    ></div>
                                 </div>
-                                <!-- PROGRESS -->
-                                <div
-                                    x-cloak
-                                    :style="`--value:${progress}; --size:1.5rem; --thickness: 4px;`"
-                                    :class="!processing && 'hidden'"
-                                    class="radial-progress text-success absolute top-5 start-5 bg-neutral"
-                                    role="progressbar"
-                                ></div>
+                                @if($remove || $removeMethod)
+                                    <div x-show="hasImage" x-cloak>
+                                        @if($remove)
+                                            <div @click.stop="removeImage()">
+                                                {{ $remove }}
+                                            </div>
+                                        @else
+                                            <button
+                                                type="button"
+                                                @click.stop="removeImage()"
+                                                class="btn btn-circle btn-xs btn-error"
+                                                title="{{ $removeText }}"
+                                            >
+                                                <x-mary-icon name="common-close" class="w-3 h-3" />
+                                            </button>
+                                        @endif
+                                    </div>
+                                @endif
                             </div>
 
                             <!-- CROP MODAL -->
