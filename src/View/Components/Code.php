@@ -22,6 +22,7 @@ class Code extends Component
         public string $height = '200px',
         public string $lineHeight = '2',
         public bool $printMargin = false,
+        public bool $wrap = false,
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
     }
@@ -55,6 +56,7 @@ class Code extends Component
                                 this.editor.setShowPrintMargin({{ json_encode($printMargin) }});
                                 this.editor.container.style.lineHeight = {{ $lineHeight }};
                                 this.editor.renderer.setScrollMargin(10, 10);
+                                this.editor.session.setUseWrapMode({{ json_encode($wrap) }});
 
                                 // Initial theme
                                 (this.class == '{{ $darkClass }}')
