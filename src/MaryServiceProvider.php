@@ -77,6 +77,7 @@ use Mary\View\Components\ThemeToggle;
 use Mary\View\Components\TimelineItem;
 use Mary\View\Components\Toast;
 use Mary\View\Components\Toggle;
+use Mary\View\Components\CustomToggle;
 
 class MaryServiceProvider extends ServiceProvider
 {
@@ -188,6 +189,7 @@ class MaryServiceProvider extends ServiceProvider
         Blade::component($prefix . 'theme-toggle', ThemeToggle::class);
         Blade::component($prefix . 'toast', Toast::class);
         Blade::component($prefix . 'toggle', Toggle::class);
+        Blade::component($prefix . 'custom-toggle', CustomToggle::class);
         Blade::component($prefix . 'carousel', Carousel::class);
     }
 
