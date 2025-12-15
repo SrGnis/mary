@@ -23,6 +23,7 @@ class File extends Component
         public ?string $cropSaveText = "Crop",
         public ?array $cropConfig = [],
         public ?string $cropMimeType = "image/png",
+        public bool|string|null $spinner = null,
 
         // Validations
         public ?string $errorField = null,
@@ -32,6 +33,15 @@ class File extends Component
 
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+    }
+
+    public function spinnerTarget(): ?string
+    {
+        if ($this->spinner === true) {
+            return $this->modelName();
+        }
+
+        return $this->spinner;
     }
 
     public function modelName(): ?string
@@ -144,6 +154,11 @@ class File extends Component
 
                                 @if($attributes->get('required'))
                                     <span class="text-error">*</span>
+                                @endif
+
+                                {{-- SPINNER --}}
+                                @if($spinner)
+                                    <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner w-4 h-4"></span>
                                 @endif
                             </legend>
                         @endif

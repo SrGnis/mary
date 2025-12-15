@@ -25,6 +25,7 @@ class Input extends Component
         public ?string $locale = 'en-US',
         public ?string $popover = null,
         public ?string $popoverIcon = "o-question-mark-circle",
+        public bool|string|null $spinner = null,
 
         // Slots
         public mixed $prepend = null,
@@ -37,6 +38,15 @@ class Input extends Component
         public ?bool $firstErrorOnly = false,
     ) {
         $this->uuid = "mary" . md5(serialize($this)) . $id;
+    }
+
+    public function spinnerTarget(): ?string
+    {
+        if ($this->spinner === true) {
+            return $this->modelName();
+        }
+
+        return $this->spinner;
     }
 
     public function modelName(): ?string
@@ -88,6 +98,11 @@ class Input extends Component
                                 <span class="text-error">*</span>
                             @endif
 
+                            {{-- SPINNER --}}
+                            @if($spinner)
+                                <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner w-4 h-4"></span>
+                            @endif
+
                             {{-- INPUT POPOVER --}}
                             @if($popover)
                                 <x-mary-popover offset="5" position="top-start">
@@ -106,6 +121,11 @@ class Input extends Component
                         {{-- FLOATING LABEL--}}
                         @if ($label && $inline)
                             <span class="font-semibold">{{ $label }}</span>
+
+                            {{-- SPINNER (INLINE) --}}
+                            @if($spinner)
+                                <span wire:loading wire:target="{{ $spinnerTarget() }}" class="loading loading-spinner w-4 h-4"></span>
+                            @endif
                         @endif
 
                         <div @class(["w-full", "join" => $prepend || $append])>
