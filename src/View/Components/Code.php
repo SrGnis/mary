@@ -65,9 +65,9 @@ class Code extends Component
 
                                 // More settings
                                 this.editor.setOptions({
-                                    enableBasicAutocompletion: true,
-                                    enableLiveAutocompletion: true,
-                                    enableSnippets: true,
+                                    enableBasicAutocompletion: false,
+                                    enableLiveAutocompletion: false,
+                                    enableSnippets: false,
                                 });
 
                                 // Initial value
