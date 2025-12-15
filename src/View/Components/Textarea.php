@@ -17,6 +17,10 @@ class Textarea extends Component
         public ?string $hintClass = 'fieldset-label',
         public ?bool $inline = false,
 
+        // Character counting
+        public ?int $maxLength = null,
+        public ?bool $alpineCharCount = false,
+
         // Validations
         public ?string $errorField = null,
         public ?string $errorClass = 'text-error',
@@ -39,7 +43,7 @@ class Textarea extends Component
     public function render(): View|Closure|string
     {
         return <<<'BLADE'
-            <div>
+            <div @if($alpineCharCount && $maxLength) x-data="{ textValue: @entangle($modelName()), maxLength: {{ $maxLength }} }" @endif>
                 @php
                     // We need this extra step to support models arrays. Ex: wire:model="emails.0"  , wire:model="emails.1"
                     $uuid = $uuid . $modelName()
@@ -67,6 +71,7 @@ class Textarea extends Component
                             {{-- TEXTAREA --}}
                             <textarea
                                 placeholder="{{ $attributes->get('placeholder') }} "
+                                @if($alpineCharCount && $maxLength) x-model="textValue" @endif
 
                                {{
                                     $attributes->merge(['id' => $uuid])
@@ -94,6 +99,8 @@ class Textarea extends Component
                     {{-- HINT --}}
                     @if($hint)
                         <div class="{{ $hintClass }}" x-classes="fieldset-label">{{ $hint }}</div>
+                    @elseif($alpineCharCount && $maxLength)
+                        <div class="{{ $hintClass }}" x-text="`${textValue.length} / ${maxLength} characters`"></div>
                     @endif
                 </fieldset>
             </div>
