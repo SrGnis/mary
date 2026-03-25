@@ -7,6 +7,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Illuminate\Support\Stringable;
 use Illuminate\View\Component;
+use Mary\Support\IconNameResolver;
 
 class Icon extends Component
 {
@@ -22,22 +23,7 @@ class Icon extends Component
 
     public function icon(): string|Stringable
     {
-        $name = Str::of($this->name);
-        $iconPrefix = config('mary.icons.prefix', 'heroicon');
-
-        // If the icon name starts with "common-", get the common icon name from config
-        if (Str::startsWith($name, 'common-')) {
-            $iconKey = Str::after($name, 'common-');
-            $result = config("mary.icons.common.{$iconKey}", $iconKey);
-            return "{$iconPrefix}-{$result}";
-        }
-
-        // If the icon name already has a prefix use it as-is
-        if (Str::startsWith($name, $iconPrefix.'-')) {
-            return $name;
-        }
-
-        return $name->contains('.') ? $name->replace('.', '-') : "{$iconPrefix}-{$this->name}";
+        return IconNameResolver::resolve($this->name);
     }
 
     public function labelClasses(): ?string

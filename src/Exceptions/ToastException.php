@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Blade;
+use Mary\Support\IconNameResolver;
 
 class ToastException extends Exception
 {
@@ -34,7 +35,7 @@ class ToastException extends Exception
         string $title,
         ?string $description = null,
         string $position = 'toast-top toast-end',
-        string $icon = 'o-information-circle',
+        string $icon = 'information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
         bool $noProgress = false,
@@ -59,7 +60,7 @@ class ToastException extends Exception
         string $title,
         ?string $description = null,
         string $position = 'toast-top toast-end',
-        string $icon = 'o-information-circle',
+        string $icon = 'information-circle',
         string $css = 'alert-info',
         int $timeout = 3000,
         bool $noProgress = false,
@@ -82,7 +83,7 @@ class ToastException extends Exception
         string $title,
         ?string $description = null,
         string $position = 'toast-top toast-end',
-        string $icon = 'o-check-circle',
+        string $icon = 'check-circle',
         string $css = 'alert-success',
         int $timeout = 3000,
         bool $noProgress = false,
@@ -105,7 +106,7 @@ class ToastException extends Exception
         string $title,
         ?string $description = null,
         string $position = 'toast-top toast-end',
-        string $icon = 'o-x-circle',
+        string $icon = 'x-circle',
         string $css = 'alert-error',
         int $timeout = 3000,
         bool $noProgress = false,
@@ -128,7 +129,7 @@ class ToastException extends Exception
         string $title,
         ?string $description = null,
         string $position = 'toast-top toast-end',
-        string $icon = 'o-exclamation-triangle',
+        string $icon = 'exclamation-triangle',
         string $css = 'alert-warning',
         int $timeout = 3000,
         bool $noProgress = false,
@@ -156,6 +157,7 @@ class ToastException extends Exception
 
     public function render(Request $request): JsonResponse|false
     {
+        $resolvedIcon = IconNameResolver::resolve($this->icon);
         if ($request->hasHeader('x-livewire')) {
             return response()->json([
                 'toast' => [
@@ -164,7 +166,7 @@ class ToastException extends Exception
                     'description' => $this->description,
 
                     'position' => $this->position,
-                    'icon' => Blade::render("<x-mary-icon class='w-7 h-7' name='" . $this->icon . "' />"),
+                    'icon' => Blade::render("<x-mary-icon class='w-7 h-7' name='" . $resolvedIcon . "' />"),
                     'css' => $this->css,
                     'timeout' => $this->timeout,
 

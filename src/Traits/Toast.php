@@ -3,6 +3,7 @@
 namespace Mary\Traits;
 
 use Blade;
+use Mary\Support\IconNameResolver;
 
 trait Toast
 {
@@ -18,12 +19,14 @@ trait Toast
         bool $noProgress = false,
         ?string $progressClass = null,
     ) {
+        $resolvedIcon = IconNameResolver::resolve($icon);
+
         $toast = [
             'type' => $type,
             'title' => $title,
             'description' => $description,
             'position' => $position,
-            'icon' => Blade::render("<x-mary-icon class='w-7 h-7' name='".$icon."' />"),
+            'icon' => Blade::render("<x-mary-icon class='w-7 h-7' name='".$resolvedIcon."' />"),
             'css' => $css,
             'timeout' => $timeout,
             'noProgress' => $noProgress,
