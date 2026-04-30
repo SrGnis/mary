@@ -22,6 +22,12 @@ class DatePicker extends Component
         public ?bool $clearable = false,
         public ?array $config = [],
 
+	    // Popover
+        public ?string $popover = null,
+        public ?string $popoverIcon = "o-question-mark-circle",
+        public ?string $popoverTriggerClass = '',
+        public ?string $popoverContentClass = '',
+
         // Slots
         public mixed $prepend = null,
         public mixed $append = null,
@@ -117,6 +123,18 @@ class DatePicker extends Component
                             @if($attributes->get('required'))
                                 <span class="text-error">*</span>
                             @endif
+                            
+                            {{-- INPUT POPOVER --}}
+                            @if($popover)
+                                <x-mary-popover offset="5" position="top-start">
+                                    <x-slot:trigger class="{{ $popoverTriggerClass }}">
+                                        <x-mary-icon :name="$popoverIcon" class="w-4 h-4 opacity-40 mb-0.5" />
+                                    </x-slot:trigger>
+                                    <x-slot:content class="{{ $popoverContentClass }}">
+                                        {{ $popover }}
+                                    </x-slot:content>
+                                </x-mary-popover>
+                            @endif
                         </legend>
                     @endif
 
@@ -126,7 +144,7 @@ class DatePicker extends Component
                             <span class="font-semibold">{{ $label }}</span>
                         @endif
 
-                        <div 
+                        <div
                             @click.outside = "clear()"
                             @keyup.esc = "clear()"
 
@@ -138,15 +156,15 @@ class DatePicker extends Component
                                 isLive: {{ json_encode($attributes->wire('model')->hasModifier('live')) }},
 
                                 init() {
-                                    $watch('value', value => { 
-                                        if (value.split(this.instance.l10n.rangeSeparator).length == 2 && this.isLive) { 
-                                            $wire.set('{{ $modelName() }}', value) 
+                                    $watch('value', value => {
+                                        if (value.split(this.instance.l10n.rangeSeparator).length == 2 && this.isLive) {
+                                            $wire.set('{{ $modelName() }}', value)
                                         }
-                                        
+
                                         if (value !== '' || !this.isLive) {
                                             return
                                         }
-                                        
+
                                         if (this.isRange) {
                                             $wire.set('{{ $modelName() }}', '')
                                             this.instance.close()
@@ -154,6 +172,12 @@ class DatePicker extends Component
                                             this.instance.close()
                                         }
                                     })
+                                },
+                                destroy() {
+                                    if (this.instance) {
+                                        this.instance.destroy()
+                                        this.instance = undefined
+                                    }
                                 },
                                 get isValueEmpty() {
                                     return this.value == ''
@@ -213,7 +237,7 @@ class DatePicker extends Component
                                 </span>
 
                                 {{-- INPUT --}}
-                                <div 
+                                <div
                                     x-init="instance = flatpickr($refs.input, {{ $setup() }});"
                                     x-on:livewire:navigating.window="instance.destroy();"
                                     class="w-full"
