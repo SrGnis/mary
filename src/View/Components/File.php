@@ -127,6 +127,8 @@ class File extends Component
                             this.justCropped = false
                             this.hasImage = true
 
+                            this.$el.dispatchEvent(new CustomEvent('mary-file-changed', { bubbles: true }))
+
                             if (this.imagePreview?.src) {
                                 this.imagePreview.src = URL.createObjectURL(this.$refs.file.files[0])
                                 this.imageCrop.src = this.imagePreview.src
@@ -147,6 +149,8 @@ class File extends Component
                             this.hasImage = false
                             this.file = null
                             this.$refs.file.value = ''
+
+                            this.$el.dispatchEvent(new CustomEvent('mary-file-changed', { bubbles: true }))
 
                             if (this.imagePreview && this.placeholderUrl) {
                                 this.imagePreview.src = this.placeholderUrl
