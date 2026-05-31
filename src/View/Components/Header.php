@@ -48,7 +48,7 @@ class Header extends Component
     public function render(): View|Closure|string
     {
         return <<<'HTML'
-                <div id="{{ $anchor }}" {{ $attributes->class(["mb-10", "mary-header-anchor" => $withAnchor]) }}>
+                <div id="{{ $anchor }}" {{ $attributes->class(["mb-6", "mary-header-anchor" => $withAnchor]) }}>
                     <div class="flex flex-wrap gap-5 justify-between items-center">
                         <div>
                             {!! "<{$titleTag}" !!} @class(["flex", "items-center", "$size $weight", is_string($title) ? '' : $title?->attributes->get('class') ]) >
@@ -90,7 +90,7 @@ class Header extends Component
                     </div>
 
                     @if($separator)
-                        <hr class="border-t-[length:var(--border)] border-base-content/10 mt-3" />
+                        <hr class="border-t-[length:var(--border)] border-base-content/10 mt-2" />
 
                         @if($progressIndicator)
                             <div class="h-0.5 -mt-4 mb-4">
